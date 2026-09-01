@@ -1,0 +1,1470 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>D+0 MONITORING PORTAL INDORE POSTAL REGION</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta name="theme-color" content="#31103f">
+    <style>
+        .report-header{background:linear-gradient(135deg,#2c0c38 0,#3f1251 100%);color:#fff}
+        .report-grand{background-color:#31103f;color:#fff;font-weight:700}
+        .nil-table{border-collapse:collapse;width:100%;font-size:11px;text-align:center}
+        .nil-table td,.nil-table th{border:1px solid #707070;padding:4px 5px}
+        .nil-table th{background-color:#b8cce4;color:#000;font-weight:700;vertical-align:middle}
+        .div-bg-indore-city,.div-bg-khandwa{background-color:#f2dcdb;font-weight:700;color:maroon}
+        .div-bg-indore-mfl{background-color:#dce6f1;font-weight:700;color:#1f497d}
+        .div-bg-mandsaur{background-color:#e2efda;font-weight:700;color:#375623}
+        .div-bg-ratlam{background-color:#e1d5e7;font-weight:700;color:#595959}
+        .div-bg-sehore{background-color:#d9edf7;font-weight:700;color:#31708f}
+        .div-bg-ujjain{background-color:#d9d9d9;font-weight:700;color:#333}
+        .div-bg-id-division{background-color:#fff2cc;font-weight:700;color:#7f6000}
+        .div-bg-not-in-qc{background-color:#fee2e2;font-weight:700;color:#991b1b}
+        .row-div-total{background-color:#fce4d6;font-weight:700;color:#000}
+        .row-grand-total{background-color:#bdd7ee;font-weight:700;color:#000;font-size:11.5px}
+        .clickable-cell{cursor:pointer;text-decoration:underline}
+        .clickable-cell:hover{opacity:.75}
+        .ctrl-select{border:1px solid #cbd5e1;border-radius:0.5rem;padding:0.35rem 0.5rem;font-size:0.75rem;background-color:#f8fafc;font-weight:600;outline:none;width:100%}
+        .ctrl-select:focus{border-color:#581c87}
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col justify-between text-xs">
+
+<!-- Header -->
+<header class="report-header shadow-md py-3.5 px-4 md:px-8 border-b-2 border-purple-950">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div class="flex items-center gap-3">
+            <div class="bg-white p-1.5 rounded-xl shadow-sm flex items-center justify-center text-xl">
+                🚚
+            </div>
+            <div>
+                <span class="text-[10px] font-bold tracking-widest text-purple-200 uppercase bg-purple-950/70 px-2 py-0.5 rounded border border-purple-800">DEPARTMENT OF POSTS</span>
+                <h1 class="text-lg md:text-xl font-extrabold tracking-tight text-white mt-0.5">D+0 MONITORING PORTAL INDORE POSTAL REGION</h1>
+                <p class="text-[11px] text-purple-200 mt-0.5 font-medium flex items-center gap-2">
+                    <span>BASED ON D+0 TRANSIT ANALYSIS REPORT</span>
+                    <span id="augPeriodBadge" class="bg-amber-400 text-purple-950 font-black px-2 py-0.2 rounded text-[10px] hidden"></span>
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center flex-wrap gap-2.5">
+            <span id="liveStatus" class="bg-emerald-600 text-white text-[11px] px-3 py-1 rounded-full font-bold shadow flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Connecting Sheets...
+            </span>
+            <button onclick="exportCompleteSevenSheetExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition cursor-pointer border border-emerald-500 flex items-center gap-1">
+                <span>📑</span> 7-Sheet Excel
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Navigation Tabs -->
+<nav class="bg-white border-b border-slate-200 shadow-sm py-2 px-4 md:px-8 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center gap-1.5">
+        <button onclick="switchTab('summary')" id="tabBtnSummary" class="bg-purple-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow transition flex items-center gap-1.5 border-b-2 border-purple-500 cursor-pointer">
+            <span>📊</span> Summary Report
+        </button>
+        <button onclick="switchTab('offices')" id="tabBtnOffices" class="bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 border border-slate-200 cursor-pointer">
+            <span>🔍</span> Detailed Office View
+        </button>
+        <button onclick="switchTab('rankings')" id="tabBtnRankings" class="bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 border border-slate-200 cursor-pointer">
+            <span>⭐</span> Top & Bottom Rankings
+        </button>
+        <button onclick="switchTab('compare')" id="tabBtnCompare" class="bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 border border-slate-200 cursor-pointer">
+            <span>📈</span> Multi-Month Comparison
+        </button>
+    </div>
+</nav>
+
+<!-- Main Workspace -->
+<main class="max-w-7xl mx-auto px-3 md:px-6 py-4 space-y-4 w-full flex-grow">
+
+    <!-- 1. SUMMARY VIEW -->
+    <div id="viewSummary" class="space-y-3">
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 items-end">
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">📅 Month</label>
+                <select id="sumMonth" onchange="renderSummaryTable()" class="ctrl-select text-purple-950 font-bold">
+                    <option value="APR">April</option>
+                    <option value="MAY">May</option>
+                    <option value="JUN">June</option>
+                    <option value="JUL">July</option>
+                    <option value="AUG" selected>August</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">📦 Domain</label>
+                <select id="sumDomain" onchange="renderSummaryTable()" class="ctrl-select text-purple-950 font-bold">
+                    <option value="both">📦+✉️ Both (Total)</option>
+                    <option value="parcel">📦 Parcel Operations</option>
+                    <option value="mail">✉️ Mail Operations</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">🏢 BO Inclusion Mode</label>
+                <select id="sumBoMode" onchange="renderSummaryTable()" class="ctrl-select">
+                    <option value="excluding_bo" selected>Excluding BO (HO+SO+NDC)</option>
+                    <option value="including_bo">Including BO (All)</option>
+                    <option value="only_bo">Only BO</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">🏛️ Filter Division</label>
+                <select id="sumDivision" onchange="renderSummaryTable()" class="ctrl-select">
+                    <option value="All">All Divisions</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">📋 Aggregation</label>
+                <select id="sumViewType" onchange="renderSummaryTable()" class="ctrl-select">
+                    <option value="subdivision">Sub-Division Wise</option>
+                    <option value="division">Division Wise</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" id="cardSummary">
+            <div class="report-header px-4 py-2.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div>
+                    <h2 id="sumTableTitle" class="font-bold text-sm">📊 D+0 Performance Summary</h2>
+                    <p class="text-[10px] text-purple-200">Percentages evaluated against Total Received articles.</p>
+                </div>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                    <button onclick='exportTableToExcel("tableSummary","D0_Summary_Report.xlsx")' class="bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📥 Excel</button>
+                    <button onclick='exportSingleTablePDF("tableSummary","D0 Summary Report")' class="bg-rose-800 hover:bg-rose-900 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📄 PDF</button>
+                    <button onclick='exportContainerJPEG("cardSummary","D0_Summary_Report")' class="bg-indigo-700 hover:bg-indigo-800 text-white text-[11px] font-semibold px-2 py-1 rounded shadow">📸 JPEG</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto p-2">
+                <table class="nil-table" id="tableSummary">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" id="thSumDiv" style="width:12%">Division</th>
+                            <th rowspan="2" id="thSumSubDiv" style="width:14%">Sub-Division</th>
+                            <th rowspan="2" style="width:7%;background-color:#d9edf7">Total Received</th>
+                            <th rowspan="2" style="width:7%;background-color:#d9edf7">Total Invoiced</th>
+                            <th colspan="2" style="background-color:#c6efce">D+0 Delivered</th>
+                            <th colspan="2" style="background-color:#fff2cc">D+0 Redirected</th>
+                            <th colspan="2" style="background-color:#fce4d6">D+0 Returned</th>
+                            <th rowspan="2" style="background-color:#fed7aa;width:8%">% of D+0 (RTS+Redirect)</th>
+                            <th colspan="2" style="background-color:#e1d5e7">Total D+0 Actioned</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color:#c6efce">Count</th>
+                            <th style="background-color:#c6efce">%</th>
+                            <th style="background-color:#fff2cc">Count</th>
+                            <th style="background-color:#fff2cc">%</th>
+                            <th style="background-color:#fce4d6">Count</th>
+                            <th style="background-color:#fce4d6">%</th>
+                            <th style="background-color:#e1d5e7">Count</th>
+                            <th style="background-color:#e1d5e7">%</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. DETAILED OFFICE VIEW -->
+    <div id="viewOffices" class="space-y-3 hidden">
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 items-end">
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">📅 Month</label>
+                <select id="offMonth" onchange="renderOfficeTable()" class="ctrl-select font-bold text-purple-950">
+                    <option value="APR">April</option>
+                    <option value="MAY">May</option>
+                    <option value="JUN">June</option>
+                    <option value="JUL">July</option>
+                    <option value="AUG" selected>August</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">📦 Domain</label>
+                <select id="offDomain" onchange="renderOfficeTable()" class="ctrl-select font-bold text-purple-950">
+                    <option value="both">📦+✉️ Both (Total)</option>
+                    <option value="parcel">📦 Parcel Operations</option>
+                    <option value="mail">✉️ Mail Operations</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">🏛️ Division</label>
+                <select id="offDivision" onchange="renderOfficeTable()" class="ctrl-select">
+                    <option value="All">All Divisions</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">🏢 Office Class</label>
+                <select id="offClass" onchange="renderOfficeTable()" class="ctrl-select">
+                    <option value="All">All Classes</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">Sort Metric</label>
+                <select id="offSortMetric" onchange="renderOfficeTable()" class="ctrl-select">
+                    <option value="pctTotal">Total Actioned %</option>
+                    <option value="pctRtsRedir">% of D+0 (RTS + Redirect)</option>
+                    <option value="pctRedir">D+0 Redirected %</option>
+                    <option value="pctRet">D+0 Returned %</option>
+                    <option value="pctDel">D+0 Delivered %</option>
+                    <option value="received">Total Received</option>
+                    <option value="invoiced">Total Invoiced</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">Sort Direction</label>
+                <select id="offSortDir" onchange="renderOfficeTable()" class="ctrl-select">
+                    <option value="desc">Highest to Lowest (Desc)</option>
+                    <option value="asc">Lowest to Highest (Asc)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" id="cardOffices">
+            <div class="report-header px-4 py-2.5 flex justify-between items-center gap-2">
+                <h2 class="font-bold text-sm">🔍 Post Office Detailed Performance</h2>
+                <div class="flex gap-1.5">
+                    <button onclick="exportOfficeTableExcel()" class="bg-blue-700 hover:bg-blue-800 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow cursor-pointer">📥 Download Excel</button>
+                    <button onclick='exportSingleTablePDF("tableOffice","Detailed Office Performance")' class="bg-rose-800 hover:bg-rose-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow cursor-pointer">📄 PDF</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto p-2">
+                <table class="nil-table" id="tableOffice">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width:3%">#</th>
+                            <th rowspan="2" style="width:8%">Office ID</th>
+                            <th rowspan="2" style="width:15%;text-align:left">Office Name</th>
+                            <th rowspan="2" style="width:5%">Class</th>
+                            <th rowspan="2" style="width:10%">Sub-Division</th>
+                            <th rowspan="2" style="width:8%">Division</th>
+                            <th rowspan="2" style="width:6%;background-color:#d9edf7">Received</th>
+                            <th rowspan="2" style="width:6%;background-color:#d9edf7">Invoiced</th>
+                            <th colspan="2" style="background-color:#c6efce">D+0 Delivered</th>
+                            <th colspan="2" style="background-color:#fff2cc">D+0 Redirected</th>
+                            <th colspan="2" style="background-color:#fce4d6">D+0 Returned</th>
+                            <th rowspan="2" style="background-color:#fed7aa;width:7%">% D+0 (RTS+Redirect)</th>
+                            <th colspan="2" style="background-color:#e1d5e7">Total D+0 Actioned</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color:#c6efce">Count</th>
+                            <th style="background-color:#c6efce">%</th>
+                            <th style="background-color:#fff2cc">Count</th>
+                            <th style="background-color:#fff2cc">%</th>
+                            <th style="background-color:#fce4d6">Count</th>
+                            <th style="background-color:#fce4d6">%</th>
+                            <th style="background-color:#e1d5e7">Count</th>
+                            <th style="background-color:#e1d5e7">%</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. RANKINGS VIEW -->
+    <div id="viewRankings" class="space-y-3 hidden">
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 items-end">
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">📅 Month</label>
+                <select id="rnkMonth" onchange="renderRankingsTable()" class="ctrl-select font-bold text-purple-950">
+                    <option value="APR">April</option>
+                    <option value="MAY">May</option>
+                    <option value="JUN">June</option>
+                    <option value="JUL">July</option>
+                    <option value="AUG" selected>August</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">📦 Domain</label>
+                <select id="rnkDomain" onchange="renderRankingsTable()" class="ctrl-select font-bold text-purple-950">
+                    <option value="both">📦+✉️ Both (Total)</option>
+                    <option value="parcel">📦 Parcel Operations</option>
+                    <option value="mail">✉️ Mail Operations</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">Ranking Type</label>
+                <select id="rnkType" onchange="renderRankingsTable()" class="ctrl-select font-bold text-purple-950">
+                    <option value="top">🏆 Top 20 Offices</option>
+                    <option value="bottom">⚠️ Bottom 20 Offices</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">Rank Metric</label>
+                <select id="rnkMetric" onchange="renderRankingsTable()" class="ctrl-select">
+                    <option value="pctTotal">Total Actioned %</option>
+                    <option value="pctRtsRedir">% of D+0 (RTS + Redirect)</option>
+                    <option value="pctRedir">D+0 Redirected %</option>
+                    <option value="pctRet">D+0 Returned %</option>
+                    <option value="pctDel">D+0 Delivered %</option>
+                    <option value="received">Total Received</option>
+                    <option value="invoiced">Total Invoiced</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">🏛️ Division</label>
+                <select id="rnkDivision" onchange="renderRankingsTable()" class="ctrl-select">
+                    <option value="All">All Divisions</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">🏢 Class</label>
+                <select id="rnkClass" onchange="renderRankingsTable()" class="ctrl-select">
+                    <option value="All">All Classes</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" id="cardRankings">
+            <div class="report-header px-4 py-2.5 flex justify-between items-center gap-2">
+                <h2 class="font-bold text-sm">⭐ Performance Rankings (Top & Bottom 20)</h2>
+                <div class="flex gap-1.5">
+                    <button onclick='exportTableToExcel("tableRankings","D0_Rankings.xlsx")' class="bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow cursor-pointer">📥 Excel</button>
+                    <button onclick='exportContainerJPEG("cardRankings","D0_Rankings")' class="bg-indigo-700 hover:bg-indigo-800 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow cursor-pointer">📸 JPEG</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto p-2">
+                <table class="nil-table" id="tableRankings">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width:4%">Rank</th>
+                            <th rowspan="2" style="width:8%">Office ID</th>
+                            <th rowspan="2" style="width:16%;text-align:left">Office Name</th>
+                            <th rowspan="2" style="width:5%">Class</th>
+                            <th rowspan="2" style="width:10%">Sub-Division</th>
+                            <th rowspan="2" style="width:8%">Division</th>
+                            <th rowspan="2" style="width:6%;background-color:#d9edf7">Received</th>
+                            <th rowspan="2" style="width:6%;background-color:#d9edf7">Invoiced</th>
+                            <th colspan="2" style="background-color:#c6efce">D+0 Delivered</th>
+                            <th colspan="2" style="background-color:#fff2cc">D+0 Redirected</th>
+                            <th colspan="2" style="background-color:#fce4d6">D+0 Returned</th>
+                            <th rowspan="2" style="background-color:#fed7aa;width:7%">% D+0 (RTS+Redirect)</th>
+                            <th colspan="2" style="background-color:#e1d5e7">Total D+0 Actioned</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color:#c6efce">Count</th>
+                            <th style="background-color:#c6efce">%</th>
+                            <th style="background-color:#fff2cc">Count</th>
+                            <th style="background-color:#fff2cc">%</th>
+                            <th style="background-color:#fce4d6">Count</th>
+                            <th style="background-color:#fce4d6">%</th>
+                            <th style="background-color:#e1d5e7">Count</th>
+                            <th style="background-color:#e1d5e7">%</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. MULTI-MONTH COMPARISON VIEW -->
+    <div id="viewCompare" class="space-y-3 hidden">
+        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 space-y-3">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 items-end">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">1. Comparison Level</label>
+                    <select id="cmpLevel" onchange="onCmpLevelChange()" class="ctrl-select font-bold text-purple-950">
+                        <option value="division">Division Wise</option>
+                        <option value="subdivision">Sub-Division Wise</option>
+                        <option value="office">Post Office Wise</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">2. Domain</label>
+                    <select id="cmpDomain" onchange="renderCompareTable()" class="ctrl-select font-bold text-purple-950">
+                        <option value="both">📦+✉️ Both (Total)</option>
+                        <option value="parcel">📦 Parcel Operations</option>
+                        <option value="mail">✉️ Mail Operations</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">3. BO Inclusion Mode</label>
+                    <select id="cmpBoMode" onchange="renderCompareTable()" class="ctrl-select">
+                        <option value="excluding_bo" selected>Excluding BO (HO+SO+NDC)</option>
+                        <option value="including_bo">Including BO (All)</option>
+                        <option value="only_bo">Only BO</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">4. Division</label>
+                    <select id="cmpDivision" onchange="renderCompareTable()" class="ctrl-select">
+                        <option value="All">All Divisions</option>
+                    </select>
+                </div>
+                <div id="cmpClassWrapper" class="hidden">
+                    <label class="block text-[10px] font-bold uppercase text-purple-950 mb-0.5">5. Office Class</label>
+                    <select id="cmpClass" onchange="renderCompareTable()" class="ctrl-select font-bold text-purple-950">
+                        <option value="All">All Classes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Months Checkboxes -->
+            <div class="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-3">
+                <span class="text-[10px] font-bold uppercase text-purple-950">Select Months:</span>
+                <div class="flex flex-wrap gap-1.5 text-[11px] font-bold">
+                    <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded border border-purple-200 cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="APR" checked onchange="renderCompareTable()" class="accent-purple-900"> Apr
+                    </label>
+                    <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded border border-purple-200 cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="MAY" checked onchange="renderCompareTable()" class="accent-purple-900"> May
+                    </label>
+                    <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded border border-purple-200 cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="JUN" checked onchange="renderCompareTable()" class="accent-purple-900"> Jun
+                    </label>
+                    <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded border border-purple-200 cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="JUL" checked onchange="renderCompareTable()" class="accent-purple-900"> Jul
+                    </label>
+                    <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded border border-purple-200 cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="AUG" checked onchange="renderCompareTable()" class="accent-purple-900"> Aug
+                    </label>
+                </div>
+            </div>
+
+            <!-- Metrics Checkboxes -->
+            <div class="pt-2 border-t border-slate-100">
+                <span class="text-[10px] font-bold uppercase text-purple-950 block mb-1">Select Comparison Metrics:</span>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 text-[11px] font-semibold">
+                    <label class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" name="cmpMetric" value="pctTotal" checked onchange="renderCompareTable()" class="accent-purple-900">
+                        <span>Total Actioned %</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" name="cmpMetric" value="pctRtsRedir" checked onchange="renderCompareTable()" class="accent-purple-900">
+                        <span>% (RTS + Redirect)</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" name="cmpMetric" value="pctRedir" onchange="renderCompareTable()" class="accent-purple-900">
+                        <span>D+0 Redirect %</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" name="cmpMetric" value="pctRet" onchange="renderCompareTable()" class="accent-purple-900">
+                        <span>D+0 Return %</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" name="cmpMetric" value="pctDel" onchange="renderCompareTable()" class="accent-purple-900">
+                        <span>D+0 Delivered %</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" name="cmpMetric" value="received" onchange="renderCompareTable()" class="accent-purple-900">
+                        <span>Total Received</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" id="cardCompare">
+            <div class="report-header px-4 py-2.5 flex justify-between items-center gap-2">
+                <h2 class="font-bold text-sm">📈 Multi-Month Performance Comparison</h2>
+                <div class="flex gap-1.5">
+                    <button onclick='exportTableToExcel("tableCompare","D0_MultiMonth_Comparison.xlsx")' class="bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow cursor-pointer">📥 Excel</button>
+                    <button onclick='exportSingleTablePDF("tableCompare","Multi Month Comparison")' class="bg-rose-800 hover:bg-rose-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow cursor-pointer">📄 PDF</button>
+                    <button onclick='exportContainerJPEG("cardCompare","D0_MultiMonth_Comparison")' class="bg-indigo-700 hover:bg-indigo-800 text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow cursor-pointer">📸 JPEG</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto p-2">
+                <table class="nil-table" id="tableCompare">
+                    <thead></thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Drilldown Modal -->
+<div id="drillModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[85vh] flex flex-col overflow-hidden border border-purple-300">
+        <div class="report-header px-4 py-3 flex justify-between items-center">
+            <div>
+                <h3 id="modalTitle" class="font-bold text-base">Office Performance Breakdown</h3>
+                <p id="modalSubtitle" class="text-[11px] text-purple-200">List of offices</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="exportModalExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow cursor-pointer">📥 Excel</button>
+                <button onclick="closeDrillModal()" class="bg-purple-950 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold cursor-pointer">✕</button>
+            </div>
+        </div>
+        <div class="p-3 overflow-y-auto flex-grow overflow-x-auto">
+            <table class="nil-table" id="tableModalOffices">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width:4%">#</th>
+                        <th rowspan="2" style="width:9%">Office ID</th>
+                        <th rowspan="2" style="width:16%;text-align:left">Office Name</th>
+                        <th rowspan="2" style="width:5%">Class</th>
+                        <th rowspan="2" style="width:6%;background-color:#d9edf7">Received</th>
+                        <th rowspan="2" style="width:6%;background-color:#d9edf7">Invoiced</th>
+                        <th colspan="2" style="background-color:#c6efce">D+0 Delivered</th>
+                        <th colspan="2" style="background-color:#fff2cc">D+0 Redirected</th>
+                        <th colspan="2" style="background-color:#fce4d6">D+0 Returned</th>
+                        <th rowspan="2" style="background-color:#fed7aa;width:8%">% D+0 (RTS+Redirect)</th>
+                        <th colspan="2" style="background-color:#e1d5e7">Total D+0 Actioned</th>
+                    </tr>
+                    <tr>
+                        <th style="background-color:#c6efce">Count</th>
+                        <th style="background-color:#c6efce">%</th>
+                        <th style="background-color:#fff2cc">Count</th>
+                        <th style="background-color:#fff2cc">%</th>
+                        <th style="background-color:#fce4d6">Count</th>
+                        <th style="background-color:#fce4d6">%</th>
+                        <th style="background-color:#e1d5e7">Count</th>
+                        <th style="background-color:#e1d5e7">%</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="report-header text-purple-200 text-[11px] py-3 px-4 text-center border-t border-purple-950 mt-8">
+    <p>Developed by <span class="text-white font-bold">Kapil Rajput, PA(RO), Regional Office Indore</span></p>
+</footer>
+
+<script>
+const MONTH_SHEET_URLS = {
+    APR: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=1585395821&single=true&output=csv",
+    MAY: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=1940610450&single=true&output=csv",
+    JUN: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=97263548&single=true&output=csv",
+    JUL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=64552426&single=true&output=csv",
+    AUG: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=1714320452&single=true&output=csv"
+};
+
+const divClassMap = {
+    "INDORE CITY": "div-bg-indore-city",
+    "INDORE MFL": "div-bg-indore-mfl",
+    "KHANDWA": "div-bg-khandwa",
+    "MANDSAUR": "div-bg-mandsaur",
+    "RATLAM": "div-bg-ratlam",
+    "SEHORE": "div-bg-sehore",
+    "UJJAIN": "div-bg-ujjain",
+    "ID DIVISION": "div-bg-id-division",
+    "NOT IN QC LIST": "div-bg-not-in-qc"
+};
+
+const MONTH_NAMES = { APR:"April", MAY:"May", JUN:"June", JUL:"July", AUG:"August" };
+const METRIC_LABELS = {
+    pctTotal: "Total Actioned %",
+    pctRtsRedir: "% (RTS + Redirect)",
+    pctRedir: "D+0 Redirect %",
+    pctRet: "D+0 Return %",
+    pctDel: "D+0 Delivered %",
+    received: "Total Received"
+};
+
+let rawMonthData = {};
+let augustPeriodInfo = "";
+let currentModalData = [];
+
+async function initApp(){
+    try {
+        const fetchPromises = Object.entries(MONTH_SHEET_URLS).map(async ([mKey, url]) => {
+            const res = await fetch(url);
+            const csvText = await res.text();
+            const wb = XLSX.read(csvText, {type:"string"});
+            const ws = wb.Sheets[wb.SheetNames[0]];
+
+            // Check A1 cell for August period
+            if(mKey === "AUG" && ws["A1"] && ws["A1"].v){
+                const a1Val = String(ws["A1"].v).trim();
+                if(a1Val && !a1Val.toUpperCase().includes("OFFICE") && !a1Val.toUpperCase().includes("S.NO")){
+                    augustPeriodInfo = a1Val;
+                }
+            }
+
+            const json = XLSX.utils.sheet_to_json(ws, {defval:""});
+            rawMonthData[mKey] = json.map(parseRowItem).filter(Boolean);
+        });
+
+        await Promise.all(fetchPromises);
+
+        document.getElementById("liveStatus").innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Live Connected`;
+        if(augustPeriodInfo){
+            const badge = document.getElementById("augPeriodBadge");
+            badge.textContent = `Period: ${augustPeriodInfo} Aug`;
+            badge.classList.remove("hidden");
+        }
+
+        initDropdownOptions();
+        renderSummaryTable();
+    } catch(err){
+        console.error("Error fetching D+0 sheets:", err);
+        document.getElementById("liveStatus").className = "bg-rose-600 text-white text-[11px] px-3 py-1 rounded-full font-bold shadow";
+        document.getElementById("liveStatus").textContent = "⚠️ Sync Error";
+    }
+}
+
+function parseRowItem(r){
+    const offId = String(r["Office ID"] || r["office_id"] || "").trim().replace(/\.0$/, "");
+    if(!offId || offId.toUpperCase().includes("TOTAL") || offId.toUpperCase().includes("SUMMARY")) return null;
+
+    return {
+        officeId: offId,
+        officeName: String(r["Office Name"] || r["office_name"] || "").trim(),
+        officeClass: String(r["Class"] || r["class"] || "SO").trim().toUpperCase(),
+        subDivision: String(r["Name of Sub Division"] || r["Sub-Division"] || r["sub_division"] || "OTHER SD").trim(),
+        division: String(r["Name of Division"] || r["Division"] || r["division"] || "OTHER DIVISION").trim().toUpperCase(),
+
+        pReceived: Number(r["Parcel Received"]) || 0,
+        pInvoiced: Number(r["Parcel Invoiced"]) || 0,
+        pDelivered: Number(r["Parcel D+0 Delivered"]) || 0,
+        pRedirected: Number(r["Parcel D+0 Redirected"]) || 0,
+        pReturned: Number(r["Parcel D+0 Returned"]) || 0,
+        pActioned: Number(r["Parcel Total D+0 Actioned"]) || 0,
+
+        mReceived: Number(r["Mail Ops Received"]) || 0,
+        mInvoiced: Number(r["Mail Ops Invoiced"]) || 0,
+        mDelivered: Number(r["Mail Ops D+0 Delivered"]) || 0,
+        mRedirected: Number(r["Mail Ops D+0 Redirected"]) || 0,
+        mReturned: Number(r["Mail Ops D+0 Returned"]) || 0,
+        mActioned: Number(r["Mail Ops Total D+0 Actioned"]) || 0
+    };
+}
+
+function initDropdownOptions(){
+    const allDivs = new Set();
+    const allClasses = new Set();
+
+    Object.values(rawMonthData).forEach(mList => {
+        mList.forEach(item => {
+            if(item.division) allDivs.add(item.division);
+            if(item.officeClass) allClasses.add(item.officeClass);
+        });
+    });
+
+    const divSelects = ["sumDivision", "offDivision", "rnkDivision", "cmpDivision"];
+    divSelects.forEach(id => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.innerHTML = '<option value="All">All Divisions</option>';
+        [...allDivs].sort().forEach(d => {
+            const opt = document.createElement("option");
+            opt.value = opt.textContent = d;
+            el.appendChild(opt);
+        });
+    });
+
+    const classSelects = ["offClass", "rnkClass", "cmpClass"];
+    classSelects.forEach(id => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.innerHTML = '<option value="All">All Classes</option>';
+        [...allClasses].sort().forEach(c => {
+            const opt = document.createElement("option");
+            opt.value = opt.textContent = c;
+            el.appendChild(opt);
+        });
+    });
+}
+
+function switchTab(tabKey){
+    const tabs = ["summary", "offices", "rankings", "compare"];
+    tabs.forEach(k => {
+        const isTarget = k === tabKey;
+        const btn = document.getElementById("tabBtn" + k.charAt(0).toUpperCase() + k.slice(1));
+        const view = document.getElementById("view" + k.charAt(0).toUpperCase() + k.slice(1));
+        if(btn){
+            btn.className = isTarget 
+                ? "bg-purple-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow transition flex items-center gap-1.5 border-b-2 border-purple-500 cursor-pointer"
+                : "bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 border border-slate-200 cursor-pointer";
+        }
+        if(view) view.classList.toggle("hidden", !isTarget);
+    });
+
+    setTimeout(() => {
+        if(tabKey === "summary") renderSummaryTable();
+        else if(tabKey === "offices") renderOfficeTable();
+        else if(tabKey === "rankings") renderRankingsTable();
+        else if(tabKey === "compare") renderCompareTable();
+    }, 10);
+}
+
+function onCmpLevelChange(){
+    const level = document.getElementById("cmpLevel").value;
+    const classWrap = document.getElementById("cmpClassWrapper");
+    if(level === "office"){
+        classWrap.classList.remove("hidden");
+    } else {
+        classWrap.classList.add("hidden");
+    }
+    renderCompareTable();
+}
+
+function filterDataset(records, domain, boMode, selDiv, selClass = "All"){
+    const result = [];
+    const len = records.length;
+
+    for(let i = 0; i < len; i++){
+        const item = records[i];
+        if(item.officeName.toUpperCase().includes("KHUDEL") && item.officeClass === "BO") continue;
+        if(boMode === "excluding_bo" && item.officeClass === "BO") continue;
+        if(boMode === "only_bo" && item.officeClass !== "BO") continue;
+
+        if(selDiv !== "All" && item.division !== selDiv) continue;
+        if(selClass !== "All" && item.officeClass !== selClass) continue;
+
+        let rec = 0, inv = 0, del = 0, redir = 0, ret = 0;
+        if(domain === "parcel"){
+            rec = item.pReceived; inv = item.pInvoiced; del = item.pDelivered; redir = item.pRedirected; ret = item.pReturned;
+        } else if(domain === "mail"){
+            rec = item.mReceived; inv = item.mInvoiced; del = item.mDelivered; redir = item.mRedirected; ret = item.mReturned;
+        } else {
+            rec = item.pReceived + item.mReceived;
+            inv = item.pInvoiced + item.mInvoiced;
+            del = item.pDelivered + item.mDelivered;
+            redir = item.pRedirected + item.mRedirected;
+            ret = item.pReturned + item.mReturned;
+        }
+
+        const act = del + redir + ret;
+        const rtsRedir = redir + ret;
+
+        result.push({
+            ...item,
+            received: rec,
+            invoiced: inv,
+            d0Deliver: del,
+            pctDel: rec > 0 ? (del / rec * 100) : 0,
+            d0Redirect: redir,
+            pctRedir: rec > 0 ? (redir / rec * 100) : 0,
+            d0Return: ret,
+            pctRet: rec > 0 ? (ret / rec * 100) : 0,
+            rtsRedir: rtsRedir,
+            pctRtsRedir: rec > 0 ? (rtsRedir / rec * 100) : 0,
+            totalAct: act,
+            pctTotal: rec > 0 ? (act / rec * 100) : 0
+        });
+    }
+    return result;
+}
+
+// ----------------- 1. SUMMARY VIEW -----------------
+function renderSummaryTable(){
+    const selM = document.getElementById("sumMonth").value;
+    const domain = document.getElementById("sumDomain").value;
+    const boMode = document.getElementById("sumBoMode").value;
+    const selDiv = document.getElementById("sumDivision").value;
+    const viewType = document.getElementById("sumViewType").value;
+    const isDivisionView = viewType === "division";
+
+    const data = rawMonthData[selM] || [];
+    const filtered = filterDataset(data, domain, boMode, selDiv);
+
+    const mLabel = MONTH_NAMES[selM] || "";
+    const domLabel = domain === "both" ? "Both (Parcel + Mail Ops)" : domain === "parcel" ? "Parcel" : "Mail Operations";
+    const boLabel = boMode === "excluding_bo" ? "Excl. BO" : boMode === "only_bo" ? "Only BO" : "Incl. BO";
+    document.getElementById("sumTableTitle").textContent = `📊 D+0 ${domLabel} Summary (${mLabel} - ${boLabel}${selDiv!=="All"?` - ${selDiv}`:""})`;
+
+    const thSubDiv = document.getElementById("thSumSubDiv");
+    if(isDivisionView) thSubDiv.classList.add("hidden");
+    else thSubDiv.classList.remove("hidden");
+
+    const grouped = {};
+    for(let i=0; i<filtered.length; i++){
+        const row = filtered[i];
+        const groupKey = isDivisionView ? row.division : `${row.division}||${row.subDivision}`;
+        if(!grouped[groupKey]){
+            grouped[groupKey] = { division: row.division, subDivision: row.subDivision, received: 0, invoiced: 0, d0Deliver: 0, d0Redirect: 0, d0Return: 0 };
+        }
+        grouped[groupKey].received += row.received;
+        grouped[groupKey].invoiced += row.invoiced;
+        grouped[groupKey].d0Deliver += row.d0Deliver;
+        grouped[groupKey].d0Redirect += row.d0Redirect;
+        grouped[groupKey].d0Return += row.d0Return;
+    }
+
+    const tbody = document.querySelector("#tableSummary tbody");
+    const tfoot = document.querySelector("#tableSummary tfoot");
+    tbody.innerHTML = "";
+    tfoot.innerHTML = "";
+
+    const groupList = Object.values(grouped);
+    if(!groupList.length){
+        tbody.innerHTML = `<tr><td colspan="${isDivisionView?12:13}" class="py-8 text-center text-slate-400 font-medium">No records found.</td></tr>`;
+        return;
+    }
+
+    let grandRec=0, grandInv=0, grandDel=0, grandRedir=0, grandRet=0;
+    let htmlBuffer = "";
+
+    if(isDivisionView){
+        groupList.sort((a,b)=>a.division.localeCompare(b.division)).forEach(item => {
+            grandRec += item.received; grandInv += item.invoiced; grandDel += item.d0Deliver; grandRedir += item.d0Redirect; grandRet += item.d0Return;
+            const act = item.d0Deliver + item.d0Redirect + item.d0Return;
+            const rtsRedir = item.d0Redirect + item.d0Return;
+
+            const pctDel = item.received > 0 ? ((item.d0Deliver/item.received)*100).toFixed(1)+"%" : "0.0%";
+            const pctRedir = item.received > 0 ? ((item.d0Redirect/item.received)*100).toFixed(1)+"%" : "0.0%";
+            const pctRet = item.received > 0 ? ((item.d0Return/item.received)*100).toFixed(1)+"%" : "0.0%";
+            const pctRtsRedir = item.received > 0 ? ((rtsRedir/item.received)*100).toFixed(1)+"%" : "0.0%";
+            const pctTot = item.received > 0 ? ((act/item.received)*100).toFixed(1)+"%" : "0.0%";
+
+            const divStyle = divClassMap[item.division] || "";
+            htmlBuffer += `
+                <tr class="hover:bg-slate-50 border-b border-slate-100">
+                    <td class="${divStyle} text-left font-bold clickable-cell" onclick="openDrillModal('${selM}','${domain}','${boMode}','${item.division}', 'ALL')">${item.division}</td>
+                    <td class="font-bold text-slate-800">${item.received.toLocaleString("en-IN")}</td>
+                    <td class="font-bold text-blue-900 bg-blue-50/50">${item.invoiced.toLocaleString("en-IN")}</td>
+                    <td class="font-semibold text-emerald-800">${item.d0Deliver.toLocaleString("en-IN")}</td>
+                    <td class="font-bold text-emerald-900 bg-emerald-50">${pctDel}</td>
+                    <td class="font-semibold text-amber-800">${item.d0Redirect.toLocaleString("en-IN")}</td>
+                    <td class="font-bold text-amber-900 bg-amber-50">${pctRedir}</td>
+                    <td class="font-semibold text-rose-800">${item.d0Return.toLocaleString("en-IN")}</td>
+                    <td class="font-bold text-rose-900 bg-rose-50">${pctRet}</td>
+                    <td class="font-black text-orange-950 bg-orange-100">${pctRtsRedir}</td>
+                    <td class="font-black text-purple-950 bg-purple-100/70">${act.toLocaleString("en-IN")}</td>
+                    <td class="font-black text-purple-950 bg-purple-200">${pctTot}</td>
+                </tr>
+            `;
+        });
+    } else {
+        const divTree = {};
+        groupList.forEach(item => {
+            divTree[item.division] = divTree[item.division] || [];
+            divTree[item.division].push(item);
+        });
+
+        Object.entries(divTree).forEach(([divName, subList]) => {
+            let divRec=0, divInv=0, divDel=0, divRedir=0, divRet=0;
+            const divStyle = divClassMap[divName] || "div-bg-indore-city";
+
+            subList.forEach((sub, sIdx) => {
+                divRec += sub.received; divInv += sub.invoiced; divDel += sub.d0Deliver; divRedir += sub.d0Redirect; divRet += sub.d0Return;
+                grandRec += sub.received; grandInv += sub.invoiced; grandDel += sub.d0Deliver; grandRedir += sub.d0Redirect; grandRet += sub.d0Return;
+
+                const act = sub.d0Deliver + sub.d0Redirect + sub.d0Return;
+                const rtsRedir = sub.d0Redirect + sub.d0Return;
+
+                const pctDel = sub.received > 0 ? ((sub.d0Deliver/sub.received)*100).toFixed(1)+"%" : "0.0%";
+                const pctRedir = sub.received > 0 ? ((sub.d0Redirect/sub.received)*100).toFixed(1)+"%" : "0.0%";
+                const pctRet = sub.received > 0 ? ((sub.d0Return/sub.received)*100).toFixed(1)+"%" : "0.0%";
+                const pctRtsRedir = sub.received > 0 ? ((rtsRedir/sub.received)*100).toFixed(1)+"%" : "0.0%";
+                const pctTot = sub.received > 0 ? ((act/sub.received)*100).toFixed(1)+"%" : "0.0%";
+
+                const rowSpanCell = sIdx === 0 ? `<td rowspan="${subList.length}" class="${divStyle} text-left font-bold clickable-cell align-middle" onclick="openDrillModal('${selM}','${domain}','${boMode}','${divName}', 'ALL')">${divName}</td>` : "";
+
+                htmlBuffer += `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        ${rowSpanCell}
+                        <td class="text-left font-semibold clickable-cell" onclick="openDrillModal('${selM}','${domain}','${boMode}','${divName}', '${sub.subDivision}')">${sub.subDivision}</td>
+                        <td class="font-bold text-slate-800">${sub.received.toLocaleString("en-IN")}</td>
+                        <td class="font-bold text-blue-900 bg-blue-50/50">${sub.invoiced.toLocaleString("en-IN")}</td>
+                        <td class="font-semibold text-emerald-800">${sub.d0Deliver.toLocaleString("en-IN")}</td>
+                        <td class="font-bold text-emerald-900 bg-emerald-50">${pctDel}</td>
+                        <td class="font-semibold text-amber-800">${sub.d0Redirect.toLocaleString("en-IN")}</td>
+                        <td class="font-bold text-amber-900 bg-amber-50">${pctRedir}</td>
+                        <td class="font-semibold text-rose-800">${sub.d0Return.toLocaleString("en-IN")}</td>
+                        <td class="font-bold text-rose-900 bg-rose-50">${pctRet}</td>
+                        <td class="font-black text-orange-950 bg-orange-100">${pctRtsRedir}</td>
+                        <td class="font-black text-purple-950 bg-purple-100/70">${act.toLocaleString("en-IN")}</td>
+                        <td class="font-black text-purple-950 bg-purple-200">${pctTot}</td>
+                    </tr>
+                `;
+            });
+
+            const divAct = divDel + divRedir + divRet;
+            const divRtsRedir = divRedir + divRet;
+            const divPctDel = divRec > 0 ? ((divDel/divRec)*100).toFixed(1)+"%" : "0.0%";
+            const divPctRedir = divRec > 0 ? ((divRedir/divRec)*100).toFixed(1)+"%" : "0.0%";
+            const divPctRet = divRec > 0 ? ((divRet/divRec)*100).toFixed(1)+"%" : "0.0%";
+            const divPctRtsRedir = divRec > 0 ? ((divRtsRedir/divRec)*100).toFixed(1)+"%" : "0.0%";
+            const divPctTot = divRec > 0 ? ((divAct/divRec)*100).toFixed(1)+"%" : "0.0%";
+
+            htmlBuffer += `
+                <tr class="row-div-total">
+                    <td colspan="2" class="text-left font-bold">${divName} Total</td>
+                    <td>${divRec.toLocaleString("en-IN")}</td>
+                    <td>${divInv.toLocaleString("en-IN")}</td>
+                    <td>${divDel.toLocaleString("en-IN")}</td>
+                    <td>${divPctDel}</td>
+                    <td>${divRedir.toLocaleString("en-IN")}</td>
+                    <td>${divPctRedir}</td>
+                    <td>${divRet.toLocaleString("en-IN")}</td>
+                    <td>${divPctRet}</td>
+                    <td class="font-black text-orange-950">${divPctRtsRedir}</td>
+                    <td class="font-black text-purple-950">${divAct.toLocaleString("en-IN")}</td>
+                    <td class="font-black text-purple-950">${divPctTot}</td>
+                </tr>
+            `;
+        });
+    }
+
+    tbody.innerHTML = htmlBuffer;
+
+    const grandAct = grandDel + grandRedir + grandRet;
+    const grandRtsRedir = grandRedir + grandRet;
+    const grandPctDel = grandRec > 0 ? ((grandDel/grandRec)*100).toFixed(1)+"%" : "0.0%";
+    const grandPctRedir = grandRec > 0 ? ((grandRedir/grandRec)*100).toFixed(1)+"%" : "0.0%";
+    const grandPctRet = grandRec > 0 ? ((grandRet/grandRec)*100).toFixed(1)+"%" : "0.0%";
+    const grandPctRtsRedir = grandRec > 0 ? ((grandRtsRedir/grandRec)*100).toFixed(1)+"%" : "0.0%";
+    const grandPctTot = grandRec > 0 ? ((grandAct/grandRec)*100).toFixed(1)+"%" : "0.0%";
+
+    tfoot.innerHTML = `
+        <tr class="row-grand-total">
+            <td colspan="${isDivisionView?1:2}" class="text-left pl-4">Grand Total</td>
+            <td>${grandRec.toLocaleString("en-IN")}</td>
+            <td>${grandInv.toLocaleString("en-IN")}</td>
+            <td>${grandDel.toLocaleString("en-IN")}</td>
+            <td>${grandPctDel}</td>
+            <td>${grandRedir.toLocaleString("en-IN")}</td>
+            <td>${grandPctRedir}</td>
+            <td>${grandRet.toLocaleString("en-IN")}</td>
+            <td>${grandPctRet}</td>
+            <td class="font-black text-orange-950">${grandPctRtsRedir}</td>
+            <td>${grandAct.toLocaleString("en-IN")}</td>
+            <td>${grandPctTot}</td>
+        </tr>
+    `;
+}
+
+// ----------------- 2. DETAILED OFFICE VIEW -----------------
+function renderOfficeTable(){
+    const selM = document.getElementById("offMonth").value;
+    const domain = document.getElementById("offDomain").value;
+    const selDiv = document.getElementById("offDivision").value;
+    const selClass = document.getElementById("offClass").value;
+    const sortMetric = document.getElementById("offSortMetric").value;
+    const sortDir = document.getElementById("offSortDir").value;
+
+    const data = rawMonthData[selM] || [];
+    const filtered = filterDataset(data, domain, "including_bo", selDiv, selClass);
+
+    filtered.sort((a,b)=>{
+        const valA = a[sortMetric] || 0;
+        const valB = b[sortMetric] || 0;
+        return sortDir === "desc" ? valB - valA : valA - valB;
+    });
+
+    const tbody = document.querySelector("#tableOffice tbody");
+    if(!filtered.length){
+        tbody.innerHTML = '<tr><td colspan="17" class="py-8 text-center text-slate-400 font-medium">No matching post offices found.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = filtered.map((item, idx) => `
+        <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td>${idx+1}</td>
+            <td class="font-mono font-bold text-purple-950">${item.officeId}</td>
+            <td class="text-left font-semibold">${item.officeName}</td>
+            <td><span class="bg-purple-100 text-purple-950 px-1.5 py-0.5 rounded font-bold text-[10px]">${item.officeClass}</span></td>
+            <td>${item.subDivision}</td>
+            <td>${item.division}</td>
+            <td>${item.received.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-blue-900 bg-blue-50/40">${item.invoiced.toLocaleString("en-IN")}</td>
+            <td class="font-semibold text-emerald-800">${item.d0Deliver.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-emerald-900 bg-emerald-50">${item.pctDel.toFixed(1)}%</td>
+            <td class="font-semibold text-amber-800">${item.d0Redirect.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-amber-900 bg-amber-50">${item.pctRedir.toFixed(1)}%</td>
+            <td class="font-semibold text-rose-800">${item.d0Return.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-rose-900 bg-rose-50">${item.pctRet.toFixed(1)}%</td>
+            <td class="font-black text-orange-950 bg-orange-100">${item.pctRtsRedir.toFixed(1)}%</td>
+            <td class="font-black text-purple-950 bg-purple-100/70">${item.totalAct.toLocaleString("en-IN")}</td>
+            <td class="font-black text-purple-950 bg-purple-200">${item.pctTotal.toFixed(1)}%</td>
+        </tr>
+    `).join("");
+}
+
+// ----------------- 3. RANKINGS VIEW -----------------
+function renderRankingsTable(){
+    const selM = document.getElementById("rnkMonth").value;
+    const domain = document.getElementById("rnkDomain").value;
+    const rnkType = document.getElementById("rnkType").value;
+    const rnkMetric = document.getElementById("rnkMetric").value;
+    const selDiv = document.getElementById("rnkDivision").value;
+    const selClass = document.getElementById("rnkClass").value;
+
+    const data = rawMonthData[selM] || [];
+    const filtered = filterDataset(data, domain, "including_bo", selDiv, selClass);
+
+    if(rnkType === "top"){
+        filtered.sort((a,b) => (b[rnkMetric]||0) - (a[rnkMetric]||0));
+    } else {
+        filtered.sort((a,b) => (a[rnkMetric]||0) - (b[rnkMetric]||0));
+    }
+
+    const sliced = filtered.slice(0, 20);
+    const tbody = document.querySelector("#tableRankings tbody");
+
+    if(!sliced.length){
+        tbody.innerHTML = '<tr><td colspan="17" class="py-8 text-center text-slate-400 font-medium">No ranking records available.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = sliced.map((item, idx) => `
+        <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td class="font-extrabold ${rnkType==='top'?'text-emerald-800':'text-rose-800'}">#${idx+1}</td>
+            <td class="font-mono font-bold text-purple-950">${item.officeId}</td>
+            <td class="text-left font-semibold">${item.officeName}</td>
+            <td><span class="bg-purple-100 text-purple-950 px-1.5 py-0.5 rounded font-bold text-[10px]">${item.officeClass}</span></td>
+            <td>${item.subDivision}</td>
+            <td>${item.division}</td>
+            <td>${item.received.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-blue-900 bg-blue-50/40">${item.invoiced.toLocaleString("en-IN")}</td>
+            <td class="font-semibold text-emerald-800">${item.d0Deliver.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-emerald-900 bg-emerald-50">${item.pctDel.toFixed(1)}%</td>
+            <td class="font-semibold text-amber-800">${item.d0Redirect.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-amber-900 bg-amber-50">${item.pctRedir.toFixed(1)}%</td>
+            <td class="font-semibold text-rose-800">${item.d0Return.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-rose-900 bg-rose-50">${item.pctRet.toFixed(1)}%</td>
+            <td class="font-black text-orange-950 bg-orange-100">${item.pctRtsRedir.toFixed(1)}%</td>
+            <td class="font-black text-purple-950 bg-purple-100/70">${item.totalAct.toLocaleString("en-IN")}</td>
+            <td class="font-black text-purple-950 bg-purple-200">${item.pctTotal.toFixed(1)}%</td>
+        </tr>
+    `).join("");
+}
+
+// ----------------- 4. MULTI-MONTH COMPARISON -----------------
+function renderCompareTable(){
+    const level = document.getElementById("cmpLevel").value;
+    const domain = document.getElementById("cmpDomain").value;
+    const boMode = document.getElementById("cmpBoMode").value;
+    const selDiv = document.getElementById("cmpDivision").value;
+    const selClass = level === "office" ? document.getElementById("cmpClass").value : "All";
+
+    const checkedMonths = Array.from(document.querySelectorAll("input[name='cmpMonths']:checked")).map(cb => cb.value);
+    const checkedMetrics = Array.from(document.querySelectorAll("input[name='cmpMetric']:checked")).map(cb => cb.value);
+
+    const thead = document.querySelector("#tableCompare thead");
+    const tbody = document.querySelector("#tableCompare tbody");
+    const tfoot = document.querySelector("#tableCompare tfoot");
+    thead.innerHTML = ""; tbody.innerHTML = ""; tfoot.innerHTML = "";
+
+    if(!checkedMonths.length){
+        tbody.innerHTML = '<tr><td class="py-8 text-center text-rose-600 font-bold">Please select at least one month to compare.</td></tr>';
+        return;
+    }
+    if(!checkedMetrics.length){
+        tbody.innerHTML = '<tr><td class="py-8 text-center text-rose-600 font-bold">Please select at least one metric to compare.</td></tr>';
+        return;
+    }
+
+    let tr1 = '<tr><th rowspan="2" style="width:15%">Entity Name</th>';
+    if(level === "office") tr1 = '<tr><th rowspan="2" style="width:7%">Office ID</th><th rowspan="2" style="width:14%;text-align:left">Office Name</th><th rowspan="2" style="width:5%">Class</th><th rowspan="2" style="width:8%">Division</th>';
+    else if(level === "subdivision") tr1 = '<tr><th rowspan="2" style="width:10%">Division</th><th rowspan="2" style="width:12%;text-align:left">Sub-Division</th>';
+
+    checkedMetrics.forEach(mKey => {
+        tr1 += `<th colspan="${checkedMonths.length}" style="background-color:#e1d5e7;border-left:2px solid #707070">${METRIC_LABELS[mKey]}</th>`;
+    });
+    tr1 += '</tr>';
+
+    let tr2 = '<tr>';
+    checkedMetrics.forEach(() => {
+        checkedMonths.forEach(m => {
+            tr2 += `<th style="background-color:#fce4d6">${m}</th>`;
+        });
+    });
+    tr2 += '</tr>';
+
+    thead.innerHTML = tr1 + tr2;
+
+    const monthlyAggregates = {};
+    checkedMonths.forEach(mKey => {
+        const raw = rawMonthData[mKey] || [];
+        const filtered = filterDataset(raw, domain, boMode, selDiv, selClass);
+        const map = {};
+
+        for(let i=0; i<filtered.length; i++){
+            const row = filtered[i];
+            let entityKey = level === "division" ? row.division : level === "subdivision" ? `${row.division}||${row.subDivision}` : row.officeId;
+
+            if(!map[entityKey]){
+                map[entityKey] = {
+                    officeId: row.officeId, officeName: row.officeName, officeClass: row.officeClass,
+                    division: row.division, subDivision: row.subDivision,
+                    received: 0, d0Deliver: 0, d0Redirect: 0, d0Return: 0
+                };
+            }
+            map[entityKey].received += row.received;
+            map[entityKey].d0Deliver += row.d0Deliver;
+            map[entityKey].d0Redirect += row.d0Redirect;
+            map[entityKey].d0Return += row.d0Return;
+        }
+
+        Object.values(map).forEach(e => {
+            const act = e.d0Deliver + e.d0Redirect + e.d0Return;
+            const rtsRedir = e.d0Redirect + e.d0Return;
+            e.pctDel = e.received > 0 ? (e.d0Deliver / e.received * 100) : 0;
+            e.pctRedir = e.received > 0 ? (e.d0Redirect / e.received * 100) : 0;
+            e.pctRet = e.received > 0 ? (e.d0Return / e.received * 100) : 0;
+            e.pctRtsRedir = e.received > 0 ? (rtsRedir / e.received * 100) : 0;
+            e.pctTotal = e.received > 0 ? (act / e.received * 100) : 0;
+        });
+
+        monthlyAggregates[mKey] = map;
+    });
+
+    const allKeys = new Set();
+    checkedMonths.forEach(m => Object.keys(monthlyAggregates[m] || {}).forEach(k => allKeys.add(k)));
+
+    const keysList = [...allKeys];
+    if(!keysList.length){
+        tbody.innerHTML = '<tr><td colspan="30" class="py-8 text-center text-slate-400 font-medium">No matching comparison records found.</td></tr>';
+        return;
+    }
+
+    keysList.sort();
+
+    tbody.innerHTML = keysList.map(key => {
+        let nameCells = "";
+        let sample = {};
+        for(let m of checkedMonths){
+            if(monthlyAggregates[m] && monthlyAggregates[m][key]){
+                sample = monthlyAggregates[m][key];
+                break;
+            }
+        }
+
+        if(level === "office"){
+            nameCells = `<td class="font-mono font-bold text-purple-950">${sample.officeId||key}</td><td class="text-left font-semibold">${sample.officeName||"-"}</td><td><span class="bg-purple-100 text-purple-950 px-1 py-0.5 rounded font-bold text-[10px]">${sample.officeClass||"SO"}</span></td><td>${sample.division||"-"}</td>`;
+        } else if(level === "subdivision"){
+            nameCells = `<td class="font-bold">${sample.division||"-"}</td><td class="text-left font-semibold">${sample.subDivision||"-"}</td>`;
+        } else {
+            nameCells = `<td class="font-bold text-left px-3">${sample.division||key}</td>`;
+        }
+
+        let metricCells = "";
+        checkedMetrics.forEach(mKey => {
+            checkedMonths.forEach(m => {
+                const monthObj = monthlyAggregates[m] ? monthlyAggregates[m][key] : null;
+                if(!monthObj){
+                    metricCells += `<td class="text-slate-400">-</td>`;
+                } else {
+                    const val = monthObj[mKey];
+                    if(mKey === "received"){
+                        metricCells += `<td class="font-semibold">${val.toLocaleString("en-IN")}</td>`;
+                    } else {
+                        const style = val >= 75 ? "color:#006100; font-weight:bold;" : val < 50 ? "color:#9c0006; font-weight:bold;" : "color:#835c00; font-weight:bold;";
+                        metricCells += `<td style="${style}">${val.toFixed(1)}%</td>`;
+                    }
+                }
+            });
+        });
+
+        return `<tr class="hover:bg-slate-50 border-b border-slate-100">${nameCells}${metricCells}</tr>`;
+    }).join("");
+}
+
+// ----------------- DRILLDOWN MODAL -----------------
+function openDrillModal(monthKey, domain, boMode, division, sd){
+    const data = rawMonthData[monthKey] || [];
+    const filtered = filterDataset(data, domain, boMode, "All").filter(item => {
+        if(division !== "ALL" && item.division !== division) return false;
+        if(sd !== "ALL" && item.subDivision !== sd) return false;
+        return true;
+    });
+
+    if(!filtered.length) return alert(`No offices found for ${division} / ${sd}.`);
+
+    filtered.sort((a,b)=>b.pctTotal - a.pctTotal);
+    currentModalData = filtered;
+
+    document.getElementById("modalTitle").textContent = `D+0 Offices: ${sd==="ALL" ? division : `${sd} (${division})`}`;
+    document.getElementById("modalSubtitle").textContent = `Month: ${MONTH_NAMES[monthKey]} | Total ${filtered.length} offices.`;
+
+    document.querySelector("#tableModalOffices tbody").innerHTML = filtered.map((item, idx) => `
+        <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td>${idx+1}</td>
+            <td class="font-mono font-bold text-purple-950">${item.officeId}</td>
+            <td class="text-left font-semibold">${item.officeName}</td>
+            <td><span class="bg-purple-100 text-purple-950 px-1.5 py-0.5 rounded font-bold">${item.officeClass}</span></td>
+            <td>${item.received.toLocaleString("en-IN")}</td>
+            <td class="font-bold text-blue-900 bg-blue-50/40">${item.invoiced.toLocaleString("en-IN")}</td>
+            <td class="text-emerald-800 font-semibold">${item.d0Deliver.toLocaleString("en-IN")}</td>
+            <td class="text-emerald-900 font-bold bg-emerald-50">${item.pctDel.toFixed(1)}%</td>
+            <td class="text-amber-800 font-semibold">${item.d0Redirect.toLocaleString("en-IN")}</td>
+            <td class="text-amber-900 font-bold bg-amber-50">${item.pctRedir.toFixed(1)}%</td>
+            <td class="text-rose-800 font-semibold">${item.d0Return.toLocaleString("en-IN")}</td>
+            <td class="text-rose-900 font-bold bg-rose-50">${item.pctRet.toFixed(1)}%</td>
+            <td class="font-black text-orange-950 bg-orange-100">${item.pctRtsRedir.toFixed(1)}%</td>
+            <td class="font-black bg-purple-100/70 text-purple-950">${item.totalAct.toLocaleString("en-IN")}</td>
+            <td class="font-black bg-purple-200 text-purple-950">${item.pctTotal.toFixed(1)}%</td>
+        </tr>
+    `).join("");
+
+    document.getElementById("drillModal").classList.remove("hidden");
+}
+
+function closeDrillModal(){
+    document.getElementById("drillModal").classList.add("hidden");
+}
+
+function exportModalExcel(){
+    if(!currentModalData.length) return alert("No records to export.");
+    const rows = currentModalData.map((it, idx)=>({
+        "S.No": idx+1,
+        "Office ID": it.officeId,
+        "Office Name": it.officeName,
+        "Class": it.officeClass,
+        "Sub-Division": it.subDivision,
+        "Division": it.division,
+        "Received": it.received,
+        "Invoiced": it.invoiced,
+        "D+0 Delivered": it.d0Deliver,
+        "% D+0 Delivered": `${it.pctDel.toFixed(2)}%`,
+        "D+0 Redirected": it.d0Redirect,
+        "% D+0 Redirected": `${it.pctRedir.toFixed(2)}%`,
+        "D+0 Returned": it.d0Return,
+        "% D+0 Returned": `${it.pctRet.toFixed(2)}%`,
+        "% (RTS + Redirect)": `${it.pctRtsRedir.toFixed(2)}%`,
+        "Total D+0 Actioned": it.totalAct,
+        "% Total Actioned": `${it.pctTotal.toFixed(2)}%`
+    }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "Offices_List");
+    XLSX.writeFile(wb, "D0_Drilldown_Offices.xlsx");
+}
+
+function exportOfficeTableExcel(){
+    const selM = document.getElementById("offMonth").value;
+    const domain = document.getElementById("offDomain").value;
+    const selDiv = document.getElementById("offDivision").value;
+    const selClass = document.getElementById("offClass").value;
+
+    const data = rawMonthData[selM] || [];
+    const filtered = filterDataset(data, domain, "including_bo", selDiv, selClass);
+    if(!filtered.length) return alert("No records available.");
+
+    const rows = filtered.map((it, idx)=>({
+        "S.No": idx+1,
+        "Office ID": it.officeId,
+        "Office Name": it.officeName,
+        "Class": it.officeClass,
+        "Sub-Division": it.subDivision,
+        "Division": it.division,
+        "Received": it.received,
+        "Invoiced": it.invoiced,
+        "D+0 Delivered": it.d0Deliver,
+        "% D+0 Delivered": Number(it.pctDel.toFixed(2)),
+        "D+0 Redirected": it.d0Redirect,
+        "% D+0 Redirected": Number(it.pctRedir.toFixed(2)),
+        "D+0 Returned": it.d0Return,
+        "% D+0 Returned": Number(it.pctRet.toFixed(2)),
+        "% (RTS + Redirect)": Number(it.pctRtsRedir.toFixed(2)),
+        "Total D+0 Actioned": it.totalAct,
+        "% Total Actioned": Number(it.pctTotal.toFixed(2))
+    }));
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "Offices");
+    XLSX.writeFile(wb, `D0_Offices_${selM}.xlsx`);
+}
+
+// ----------------- 7-SHEET EXCEL BUILDER -----------------
+function buildD0SummarySheet(records, domain, boMode){
+    const filtered = filterDataset(records, domain, boMode, "All");
+    const divMap = {};
+
+    filtered.forEach(row => {
+        const div = row.division || "OTHER DIVISION";
+        const sd = row.subDivision || "OTHER SD";
+
+        divMap[div] = divMap[div] || { division: div, sds: {}, rec: 0, inv: 0, del: 0, redir: 0, ret: 0 };
+        divMap[div].sds[sd] = divMap[div].sds[sd] || { division: div, sd: sd, rec: 0, inv: 0, del: 0, redir: 0, ret: 0 };
+
+        divMap[div].rec += row.received;
+        divMap[div].inv += row.invoiced;
+        divMap[div].del += row.d0Deliver;
+        divMap[div].redir += row.d0Redirect;
+        divMap[div].ret += row.d0Return;
+
+        divMap[div].sds[sd].rec += row.received;
+        divMap[div].sds[sd].inv += row.invoiced;
+        divMap[div].sds[sd].del += row.d0Deliver;
+        divMap[div].sds[sd].redir += row.d0Redirect;
+        divMap[div].sds[sd].ret += row.d0Return;
+    });
+
+    const exportRows = [];
+    let grandRec=0, grandInv=0, grandDel=0, grandRedir=0, grandRet=0;
+
+    Object.values(divMap).sort((a,b)=>a.division.localeCompare(b.division)).forEach(divItem => {
+        Object.values(divItem.sds).sort((a,b)=>a.sd.localeCompare(b.sd)).forEach(sub => {
+            const totAct = sub.del + sub.redir + sub.ret;
+            const rtsRedir = sub.redir + sub.ret;
+            exportRows.push({
+                "Division": sub.division,
+                "Sub-Division": sub.sd,
+                "Received": sub.rec,
+                "Invoiced": sub.inv,
+                "D+0 Delivered": sub.del,
+                "% D+0 Delivered": sub.rec > 0 ? Number(((sub.del/sub.rec)*100).toFixed(2)) : 0,
+                "D+0 Redirected": sub.redir,
+                "% D+0 Redirected": sub.rec > 0 ? Number(((sub.redir/sub.rec)*100).toFixed(2)) : 0,
+                "D+0 Returned": sub.ret,
+                "% D+0 Returned": sub.rec > 0 ? Number(((sub.ret/sub.rec)*100).toFixed(2)) : 0,
+                "% of D+0 (RTS + Redirect)": sub.rec > 0 ? Number(((rtsRedir/sub.rec)*100).toFixed(2)) : 0,
+                "Total D+0 Actioned": totAct,
+                "% Total Actioned": sub.rec > 0 ? Number(((totAct/sub.rec)*100).toFixed(2)) : 0
+            });
+        });
+
+        const divTotAct = divItem.del + divItem.redir + divItem.ret;
+        const divRtsRedir = divItem.redir + divItem.ret;
+        exportRows.push({
+            "Division": `${divItem.division} Total`,
+            "Sub-Division": "",
+            "Received": divItem.rec,
+            "Invoiced": divItem.inv,
+            "D+0 Delivered": divItem.del,
+            "% D+0 Delivered": divItem.rec > 0 ? Number(((divItem.del/divItem.rec)*100).toFixed(2)) : 0,
+            "D+0 Redirected": divItem.redir,
+            "% D+0 Redirected": divItem.rec > 0 ? Number(((divItem.redir/divItem.rec)*100).toFixed(2)) : 0,
+            "D+0 Returned": divItem.ret,
+            "% D+0 Returned": divItem.rec > 0 ? Number(((divItem.ret/divItem.rec)*100).toFixed(2)) : 0,
+            "% of D+0 (RTS + Redirect)": divItem.rec > 0 ? Number(((divRtsRedir/divItem.rec)*100).toFixed(2)) : 0,
+            "Total D+0 Actioned": divTotAct,
+            "% Total Actioned": divItem.rec > 0 ? Number(((divTotAct/divItem.rec)*100).toFixed(2)) : 0
+        });
+
+        grandRec += divItem.rec; grandInv += divItem.inv; grandDel += divItem.del; grandRedir += divItem.redir; grandRet += divItem.ret;
+    });
+
+    const grandTotAct = grandDel + grandRedir + grandRet;
+    const grandRtsRedir = grandRedir + grandRet;
+    exportRows.push({
+        "Division": "Grand Total",
+        "Sub-Division": "",
+        "Received": grandRec,
+        "Invoiced": grandInv,
+        "D+0 Delivered": grandDel,
+        "% D+0 Delivered": grandRec > 0 ? Number(((grandDel/grandRec)*100).toFixed(2)) : 0,
+        "D+0 Redirected": grandRedir,
+        "% D+0 Redirected": grandRec > 0 ? Number(((grandRedir/grandRec)*100).toFixed(2)) : 0,
+        "D+0 Returned": grandRet,
+        "% D+0 Returned": grandRec > 0 ? Number(((grandRet/grandRec)*100).toFixed(2)) : 0,
+        "% of D+0 (RTS + Redirect)": grandRec > 0 ? Number(((grandRtsRedir/grandRec)*100).toFixed(2)) : 0,
+        "Total D+0 Actioned": grandTotAct,
+        "% Total Actioned": grandRec > 0 ? Number(((grandTotAct/grandRec)*100).toFixed(2)) : 0
+    });
+
+    return XLSX.utils.json_to_sheet(exportRows);
+}
+
+function exportCompleteSevenSheetExcel(){
+    const selM = document.getElementById("sumMonth").value;
+    const data = rawMonthData[selM];
+    if(!data || !data.length) return alert("Please select a month with loaded data.");
+
+    const wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(wb, buildD0SummarySheet(data, "parcel", "excluding_bo"), "Parcel_Excl_BO");
+    XLSX.utils.book_append_sheet(wb, buildD0SummarySheet(data, "parcel", "including_bo"), "Parcel_Incl_BO");
+    XLSX.utils.book_append_sheet(wb, buildD0SummarySheet(data, "parcel", "only_bo"), "Parcel_Only_BO");
+
+    XLSX.utils.book_append_sheet(wb, buildD0SummarySheet(data, "mail", "excluding_bo"), "MailOps_Excl_BO");
+    XLSX.utils.book_append_sheet(wb, buildD0SummarySheet(data, "mail", "including_bo"), "MailOps_Incl_BO");
+    XLSX.utils.book_append_sheet(wb, buildD0SummarySheet(data, "mail", "only_bo"), "MailOps_Only_BO");
+
+    const officeRows = data.map((r, idx) => {
+        const pTot = r.pDelivered + r.pRedirected + r.pReturned;
+        const pRtsRedir = r.pRedirected + r.pReturned;
+        const pPctDel = r.pReceived > 0 ? Number(((r.pDelivered / r.pReceived)*100).toFixed(2)) : 0;
+        const pPctRedir = r.pReceived > 0 ? Number(((r.pRedirected / r.pReceived)*100).toFixed(2)) : 0;
+        const pPctRet = r.pReceived > 0 ? Number(((r.pReturned / r.pReceived)*100).toFixed(2)) : 0;
+        const pPctRtsRedir = r.pReceived > 0 ? Number(((pRtsRedir / r.pReceived)*100).toFixed(2)) : 0;
+        const pPctTot = r.pReceived > 0 ? Number(((pTot / r.pReceived)*100).toFixed(2)) : 0;
+
+        const mTot = r.mDelivered + r.mRedirected + r.mReturned;
+        const mRtsRedir = r.mRedirected + r.mReturned;
+        const mPctDel = r.mReceived > 0 ? Number(((r.mDelivered / r.mReceived)*100).toFixed(2)) : 0;
+        const mPctRedir = r.mReceived > 0 ? Number(((r.mRedirected / r.mReceived)*100).toFixed(2)) : 0;
+        const mPctRet = r.mReceived > 0 ? Number(((r.mReturned / r.mReceived)*100).toFixed(2)) : 0;
+        const mPctRtsRedir = r.mReceived > 0 ? Number(((mRtsRedir / r.mReceived)*100).toFixed(2)) : 0;
+        const mPctTot = r.mReceived > 0 ? Number(((mTot / r.mReceived)*100).toFixed(2)) : 0;
+
+        return {
+            "S.No": idx+1,
+            "Office ID": r.officeId,
+            "Office Name": r.officeName,
+            "Class": r.officeClass,
+            "Name of Sub Division": r.subDivision,
+            "Name of Division": r.division,
+
+            "Parcel Received": r.pReceived,
+            "Parcel Invoiced": r.pInvoiced,
+            "Parcel D+0 Delivered": r.pDelivered,
+            "Parcel % D+0 Delivered": pPctDel,
+            "Parcel D+0 Redirected": r.pRedirected,
+            "Parcel % D+0 Redirected": pPctRedir,
+            "Parcel D+0 Returned": r.pReturned,
+            "Parcel % D+0 Returned": pPctRet,
+            "Parcel % of D+0 (RTS+Redirect)": pPctRtsRedir,
+            "Parcel Total D+0 Actioned": pTot,
+            "Parcel % Total Actioned": pPctTot,
+
+            "Mail Ops Received": r.mReceived,
+            "Mail Ops Invoiced": r.mInvoiced,
+            "Mail Ops D+0 Delivered": r.mDelivered,
+            "Mail Ops % D+0 Delivered": mPctDel,
+            "Mail Ops D+0 Redirected": r.mRedirected,
+            "Mail Ops % D+0 Redirected": mPctRedir,
+            "Mail Ops D+0 Returned": r.mReturned,
+            "Mail Ops % D+0 Returned": mPctRet,
+            "Mail Ops % of D+0 (RTS+Redirect)": mPctRtsRedir,
+            "Mail Ops Total D+0 Actioned": mTot,
+            "Mail Ops % Total Actioned": mPctTot
+        };
+    });
+
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(officeRows), "All_Offices_Detailed");
+    XLSX.writeFile(wb, `D0_Delivery_Complete_Report_${selM}_7_Sheets.xlsx`);
+}
+
+// ----------------- GENERIC EXPORTS -----------------
+function exportTableToExcel(tableId, fileName){
+    const tbl = document.getElementById(tableId);
+    if(!tbl) return alert("Table not found.");
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.table_to_sheet(tbl), "D0_Report");
+    XLSX.writeFile(wb, fileName);
+}
+
+function exportSingleTablePDF(tableId, title){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("l", "mm", "a4");
+    doc.setFillColor(44, 12, 56);
+    doc.rect(0, 0, 297, 16, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("D+0 MONITORING PORTAL INDORE POSTAL REGION", 12, 10);
+    doc.setFontSize(8.5);
+    doc.text(title.toUpperCase(), 12, 14);
+
+    doc.autoTable({
+        html: "#" + tableId,
+        startY: 19,
+        margin: { top: 19, right: 8, bottom: 10, left: 8 },
+        theme: "grid",
+        styles: { fontSize: 7, cellPadding: 1.5, valign: "middle", lineColor: [180,180,180], lineWidth: 0.15 },
+        headStyles: { fillColor: [247, 202, 172], textColor: [0,0,0], fontStyle: "bold", halign: "center" },
+        footStyles: { fillColor: [247, 202, 172], textColor: [0,0,0], fontStyle: "bold" }
+    });
+    doc.save(title.replace(/\s+/g, "_") + ".pdf");
+}
+
+function exportContainerJPEG(containerId, fileName){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    html2canvas(el, { scale: 2 }).then(canvas => {
+        const a = document.createElement("a");
+        a.download = fileName + ".jpg";
+        a.href = canvas.toDataURL("image/jpeg", 0.95);
+        a.click();
+    });
+}
+
+initApp();
+</script>
+</body>
+</html>
