@@ -98,7 +98,8 @@
                     <option value="MAY">May</option>
                     <option value="JUN">June</option>
                     <option value="JUL">July</option>
-                    <option value="AUG" selected>August</option>
+                    <option value="AUG">August</option>
+                    <option value="SEP" selected>September</option>
                 </select>
             </div>
             <div>
@@ -186,7 +187,8 @@
                     <option value="MAY">May</option>
                     <option value="JUN">June</option>
                     <option value="JUL">July</option>
-                    <option value="AUG" selected>August</option>
+                    <option value="AUG">August</option>
+                    <option value="SEP" selected>September</option>
                 </select>
             </div>
             <div>
@@ -291,7 +293,8 @@
                     <option value="MAY">May</option>
                     <option value="JUN">June</option>
                     <option value="JUL">July</option>
-                    <option value="AUG" selected>August</option>
+                    <option value="AUG">August</option>
+                    <option value="SEP" selected>September</option>
                 </select>
             </div>
             <div>
@@ -437,7 +440,10 @@
                         <input type="checkbox" name="cmpMonths" value="JUL" checked onchange="renderCompareTable()" class="accent-purple-900"> Jul
                     </label>
                     <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded border border-purple-200 cursor-pointer">
-                        <input type="checkbox" name="cmpMonths" value="AUG" checked onchange="renderCompareTable()" class="accent-purple-900"> <span id="cmpAugLabel">Aug</span>
+                        <input type="checkbox" name="cmpMonths" value="AUG" checked onchange="renderCompareTable()" class="accent-purple-900"> Aug
+                    </label>
+                    <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded border border-purple-200 cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="SEP" checked onchange="renderCompareTable()" class="accent-purple-900"> <span id="cmpSepLabel">Sep</span>
                     </label>
                 </div>
             </div>
@@ -551,7 +557,8 @@ const MONTH_SHEET_URLS = {
     MAY: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=1940610450&single=true&output=csv",
     JUN: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=97263548&single=true&output=csv",
     JUL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=64552426&single=true&output=csv",
-    AUG: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=1714320452&single=true&output=csv"
+    AUG: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=1714320452&single=true&output=csv",
+    SEP: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=2001829717&single=true&output=csv"
 };
 
 const divClassMap = {
@@ -566,7 +573,7 @@ const divClassMap = {
     "NOT IN QC LIST": "div-bg-not-in-qc"
 };
 
-let MONTH_NAMES = { APR:"April", MAY:"May", JUN:"June", JUL:"July", AUG:"August" };
+let MONTH_NAMES = { APR:"April", MAY:"May", JUN:"June", JUL:"July", AUG:"August", SEP:"September" };
 const METRIC_LABELS = {
     pctTotal: "Total Actioned %",
     pctRtsRedir: "% (RTS + Redirect)",
@@ -592,14 +599,14 @@ async function initApp(){
             const wb = XLSX.read(csvText, {type:"string"});
             const ws = wb.Sheets[wb.SheetNames[0]];
 
-            // Check A1 cell for August period dynamically
-            if(mKey === "AUG" && ws["A1"] && ws["A1"].v){
+            // Check A1 cell for September period dynamically
+            if(mKey === "SEP" && ws["A1"] && ws["A1"].v){
                 const a1Val = String(ws["A1"].v).trim();
                 if(a1Val && !a1Val.toUpperCase().includes("OFFICE") && !a1Val.toUpperCase().includes("S.NO")){
                     const numMatch = a1Val.match(/\d+/);
                     const dayNum = numMatch ? numMatch[0] : a1Val;
                     const paddedDay = dayNum.length === 1 ? `0${dayNum}` : dayNum;
-                    MONTH_NAMES.AUG = `August (01 to ${paddedDay} Aug)`;
+                    MONTH_NAMES.SEP = `September (01 to ${paddedDay} Sep)`;
                 }
             }
 
@@ -680,10 +687,12 @@ function initDropdownOptions(){
         if(!el) return;
         const augOpt = el.querySelector('option[value="AUG"]');
         if(augOpt) augOpt.textContent = MONTH_NAMES.AUG;
+        const sepOpt = el.querySelector('option[value="SEP"]');
+        if(sepOpt) sepOpt.textContent = MONTH_NAMES.SEP;
     });
 
-    const cmpAugLabel = document.getElementById("cmpAugLabel");
-    if(cmpAugLabel) cmpAugLabel.textContent = MONTH_NAMES.AUG;
+    const cmpSepLabel = document.getElementById("cmpSepLabel");
+    if(cmpSepLabel) cmpSepLabel.textContent = MONTH_NAMES.SEP;
 
     const divSelects = ["sumDivision", "offDivision", "rnkDivision", "cmpDivision"];
     divSelects.forEach(id => {
@@ -1138,7 +1147,7 @@ function renderCompareTable(){
     let tr2 = '<tr>';
     checkedMetrics.forEach(() => {
         checkedMonths.forEach(m => {
-            const shortName = m === "AUG" ? "Aug" : m;
+            const shortName = m === "AUG" ? "Aug" : m === "SEP" ? "Sep" : m;
             tr2 += `<th style="background-color:#fce4d6">${shortName}</th>`;
         });
     });
