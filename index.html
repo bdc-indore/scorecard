@@ -100,6 +100,10 @@
                     <option value="JUL">July</option>
                     <option value="AUG">August</option>
                     <option value="SEP" selected>September</option>
+                    <option value="OCT">October</option>
+                    <option value="TOTAL">📅 Cumulative (Apr-Oct)</option>
+                    <option value="Q1">📅 Q1 (Apr-Jun)</option>
+                    <option value="Q2">📅 Q2 (Jul-Sep)</option>
                 </select>
             </div>
             <div>
@@ -189,6 +193,10 @@
                     <option value="JUL">July</option>
                     <option value="AUG">August</option>
                     <option value="SEP" selected>September</option>
+                    <option value="OCT">October</option>
+                    <option value="TOTAL">📅 Cumulative (Apr-Oct)</option>
+                    <option value="Q1">📅 Q1 (Apr-Jun)</option>
+                    <option value="Q2">📅 Q2 (Jul-Sep)</option>
                 </select>
             </div>
             <div>
@@ -295,6 +303,10 @@
                     <option value="JUL">July</option>
                     <option value="AUG">August</option>
                     <option value="SEP" selected>September</option>
+                    <option value="OCT">October</option>
+                    <option value="TOTAL">📅 Cumulative (Apr-Oct)</option>
+                    <option value="Q1">📅 Q1 (Apr-Jun)</option>
+                    <option value="Q2">📅 Q2 (Jul-Sep)</option>
                 </select>
             </div>
             <div>
@@ -445,6 +457,18 @@
                     <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded border border-purple-200 cursor-pointer">
                         <input type="checkbox" name="cmpMonths" value="SEP" checked onchange="renderCompareTable()" class="accent-purple-900"> <span id="cmpSepLabel">Sep</span>
                     </label>
+                    <label class="flex items-center gap-1 bg-purple-50 hover:bg-purple-100 border-purple-200 px-2.5 py-1 rounded border cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="OCT" checked onchange="renderCompareTable()" class="accent-purple-900"> <span id="cmpOctLabel">Oct</span>
+                    </label>
+                    <label class="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 border-amber-300 px-2.5 py-1 rounded border cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="Q1"  onchange="renderCompareTable()" class="accent-purple-900"> Q1 (Apr-Jun)
+                    </label>
+                    <label class="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 border-amber-300 px-2.5 py-1 rounded border cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="Q2"  onchange="renderCompareTable()" class="accent-purple-900"> Q2 (Jul-Sep)
+                    </label>
+                    <label class="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 border-amber-300 px-2.5 py-1 rounded border cursor-pointer">
+                        <input type="checkbox" name="cmpMonths" value="TOTAL"  onchange="renderCompareTable()" class="accent-purple-900"> Cumulative (Apr-Oct)
+                    </label>
                 </div>
             </div>
 
@@ -558,8 +582,10 @@ const MONTH_SHEET_URLS = {
     JUN: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=97263548&single=true&output=csv",
     JUL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=64552426&single=true&output=csv",
     AUG: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=1714320452&single=true&output=csv",
-    SEP: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=2001829717&single=true&output=csv"
+    SEP: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=2001829717&single=true&output=csv",
+    OCT: "https://docs.google.com/spreadsheets/d/e/2PACX-1vStevNQAAnFwO7ynsa5TWutYsYyKp_tFF2dYymclrvRT2j4trLTGIaPczIeGJWdVahJAbwQOJyrObDI/pub?gid=1174364599&single=true&output=csv"
 };
+const PERIOD_MONTHS = { Q1:["APR","MAY","JUN"], Q2:["JUL","AUG","SEP"], TOTAL:["APR","MAY","JUN","JUL","AUG","SEP","OCT"] };
 
 const divClassMap = {
     "INDORE CITY": "div-bg-indore-city",
@@ -573,7 +599,7 @@ const divClassMap = {
     "NOT IN QC LIST": "div-bg-not-in-qc"
 };
 
-let MONTH_NAMES = { APR:"April", MAY:"May", JUN:"June", JUL:"July", AUG:"August", SEP:"September" };
+let MONTH_NAMES = { APR:"April", MAY:"May", JUN:"June", JUL:"July", AUG:"August", SEP:"September", OCT:"October", Q1:"Q1 (Apr-Jun)", Q2:"Q2 (Jul-Sep)", TOTAL:"Cumulative (Apr-Oct)" };
 const METRIC_LABELS = {
     pctTotal: "Total Actioned %",
     pctRtsRedir: "% (RTS + Redirect)",
@@ -594,27 +620,34 @@ const OFFICE_CHUNK_SIZE = 100;
 async function initApp(){
     try {
         const fetchPromises = Object.entries(MONTH_SHEET_URLS).map(async ([mKey, url]) => {
-            const res = await fetch(url);
-            const csvText = await res.text();
-            const wb = XLSX.read(csvText, {type:"string"});
-            const ws = wb.Sheets[wb.SheetNames[0]];
+            try {
+                const res = await fetch(url);
+                const csvText = await res.text();
+                const wb = XLSX.read(csvText, {type:"string"});
+                const ws = wb.Sheets[wb.SheetNames[0]];
 
-            // Check A1 cell for September period dynamically
-            if(mKey === "SEP" && ws["A1"] && ws["A1"].v){
-                const a1Val = String(ws["A1"].v).trim();
-                if(a1Val && !a1Val.toUpperCase().includes("OFFICE") && !a1Val.toUpperCase().includes("S.NO")){
-                    const numMatch = a1Val.match(/\d+/);
-                    const dayNum = numMatch ? numMatch[0] : a1Val;
-                    const paddedDay = dayNum.length === 1 ? `0${dayNum}` : dayNum;
-                    MONTH_NAMES.SEP = `September (01 to ${paddedDay} Sep)`;
+                // October: A1 cell me jis date tak ka data hai wo bracket me dikhega (data aane par hi)
+                if(mKey === "OCT" && ws && ws["A1"] && ws["A1"].v){
+                    const a1Val = String(ws["A1"].v).trim();
+                    if(a1Val && !a1Val.toUpperCase().includes("OFFICE") && !a1Val.toUpperCase().includes("S.NO")){
+                        const numMatch = a1Val.match(/\d+/);
+                        const dayNum = numMatch ? numMatch[0] : a1Val;
+                        const paddedDay = dayNum.length === 1 ? `0${dayNum}` : dayNum;
+                        MONTH_NAMES.OCT = `October (01 to ${paddedDay} Oct)`;
+                        MONTH_NAMES.TOTAL = `Cumulative (Apr to ${paddedDay} Oct)`;
+                    }
                 }
-            }
 
-            const json = XLSX.utils.sheet_to_json(ws, {defval:""});
-            rawMonthData[mKey] = json.map(parseRowItem).filter(Boolean);
+                const json = ws ? XLSX.utils.sheet_to_json(ws, {defval:""}) : [];
+                rawMonthData[mKey] = json.map(parseRowItem).filter(Boolean);
+            } catch(e){
+                console.warn("Sheet load failed for " + mKey, e);
+                rawMonthData[mKey] = [];
+            }
         });
 
         await Promise.all(fetchPromises);
+        buildPeriodData();
 
         document.getElementById("liveStatus").innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Live Connected`;
 
@@ -631,6 +664,20 @@ async function initApp(){
             setTimeout(() => loader.classList.add("hidden"), 300);
         }
     }
+}
+
+function buildPeriodData(){
+    Object.entries(PERIOD_MONTHS).forEach(([pKey, months]) => {
+        const map = new Map();
+        months.forEach(mk => {
+            (rawMonthData[mk] || []).forEach(item => {
+                const ex = map.get(item.officeId);
+                if(!ex){ map.set(item.officeId, {...item}); return; }
+                Object.keys(item).forEach(f => { if(typeof item[f] === "number") ex[f] += item[f]; });
+            });
+        });
+        rawMonthData[pKey] = [...map.values()];
+    });
 }
 
 function parseRowItem(r){
@@ -682,17 +729,21 @@ function initDropdownOptions(){
     });
 
     const monthSelects = ["sumMonth", "offMonth", "rnkMonth"];
+    const defMonth = (rawMonthData.OCT && rawMonthData.OCT.length) ? "OCT" : "SEP";
     monthSelects.forEach(id => {
         const el = document.getElementById(id);
         if(!el) return;
-        const augOpt = el.querySelector('option[value="AUG"]');
-        if(augOpt) augOpt.textContent = MONTH_NAMES.AUG;
-        const sepOpt = el.querySelector('option[value="SEP"]');
-        if(sepOpt) sepOpt.textContent = MONTH_NAMES.SEP;
+        Object.keys(MONTH_NAMES).forEach(k => {
+            const opt = el.querySelector(`option[value="${k}"]`);
+            if(opt) opt.textContent = (PERIOD_MONTHS[k] ? "📅 " : "") + MONTH_NAMES[k];
+        });
+        el.value = defMonth;
     });
 
     const cmpSepLabel = document.getElementById("cmpSepLabel");
     if(cmpSepLabel) cmpSepLabel.textContent = MONTH_NAMES.SEP;
+    const cmpOctLabel = document.getElementById("cmpOctLabel");
+    if(cmpOctLabel) cmpOctLabel.textContent = MONTH_NAMES.OCT;
 
     const divSelects = ["sumDivision", "offDivision", "rnkDivision", "cmpDivision"];
     divSelects.forEach(id => {
@@ -1147,7 +1198,7 @@ function renderCompareTable(){
     let tr2 = '<tr>';
     checkedMetrics.forEach(() => {
         checkedMonths.forEach(m => {
-            const shortName = m === "AUG" ? "Aug" : m === "SEP" ? "Sep" : m;
+            const shortName = m === "OCT" ? MONTH_NAMES.OCT.replace("October", "Oct") : m === "TOTAL" ? MONTH_NAMES.TOTAL : (PERIOD_MONTHS[m] ? MONTH_NAMES[m] : (m.charAt(0) + m.slice(1).toLowerCase()));
             tr2 += `<th style="background-color:#fce4d6">${shortName}</th>`;
         });
     });
@@ -1240,6 +1291,32 @@ function renderCompareTable(){
 
         return `<tr class="hover:bg-slate-50 border-b border-slate-100">${nameCells}${metricCells}</tr>`;
     }).join("");
+
+    // ---- Overall Region Total (sabse niche) ----
+    const nameSpan = level === "office" ? 4 : level === "subdivision" ? 2 : 1;
+    const isFullRegion = (selDiv === "All" && selClass === "All");
+    const tot = {};
+    checkedMonths.forEach(mKey => {
+        const f = filterDataset(rawMonthData[mKey] || [], domain, boMode, selDiv, selClass);
+        const t = {received:0, d0Deliver:0, d0Redirect:0, d0Return:0};
+        f.forEach(x => { t.received += x.received; t.d0Deliver += x.d0Deliver; t.d0Redirect += x.d0Redirect; t.d0Return += x.d0Return; });
+        const act = t.d0Deliver + t.d0Redirect + t.d0Return, rr = t.d0Redirect + t.d0Return, rc = t.received;
+        t.pctDel = rc > 0 ? t.d0Deliver / rc * 100 : 0;
+        t.pctRedir = rc > 0 ? t.d0Redirect / rc * 100 : 0;
+        t.pctRet = rc > 0 ? t.d0Return / rc * 100 : 0;
+        t.pctRtsRedir = rc > 0 ? rr / rc * 100 : 0;
+        t.pctTotal = rc > 0 ? act / rc * 100 : 0;
+        tot[mKey] = t;
+    });
+    let totCells = "";
+    checkedMetrics.forEach(mKey => {
+        checkedMonths.forEach(m => {
+            const t = tot[m];
+            if(!t || t.received === 0) totCells += `<td>-</td>`;
+            else totCells += mKey === "received" ? `<td>${t.received.toLocaleString("en-IN")}</td>` : `<td>${t[mKey].toFixed(1)}%</td>`;
+        });
+    });
+    tfoot.innerHTML = `<tr class="row-grand-total"><td colspan="${nameSpan}" class="text-left pl-3 font-black">${isFullRegion ? "INDORE REGION TOTAL" : "TOTAL (selected filters)"}</td>${totCells}</tr>`;
 }
 
 // ----------------- DRILLDOWN MODAL -----------------
